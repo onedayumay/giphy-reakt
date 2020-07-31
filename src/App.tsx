@@ -3,21 +3,17 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  let Api:String = "https://api.giphy.com/v1/gifs/random?api_key=8NotAnqZix8DEeXvlRrUcsuj5LyrP5xw&tag=test&rating=g";
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div>
+          <p>Edit <code>src/App.tsx</code> and save to reload.</p>
+          <p>Api => {Api}</p>
+        </div>
       </header>
     </div>
   );

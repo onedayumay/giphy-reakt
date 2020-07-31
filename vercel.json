@@ -1,0 +1,21 @@
+{
+    "version": 2,
+    "name":"Giphy-reakt",
+    "builds":[
+        { 
+            "use": "@vercel/static-build",
+            "src": "package.json"
+        }
+    ],
+    "routes":[
+        {
+            "src": "(.*).ts", "dest": "/$1.ts"
+        },
+        {
+            "src": "(.*).json", "dest": "/$1.json"
+        },
+        {
+            "src": "/.*", "dest": "/index.html"
+        }
+    ]
+}
