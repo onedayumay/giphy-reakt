@@ -1,22 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react'
+import './App.css'
+import useGiphy from './Giphy'
 
 function App() {
 
-  let Api:String = "https://api.giphy.com/v1/gifs/random?api_key=8NotAnqZix8DEeXvlRrUcsuj5LyrP5xw&tag=test&rating=g";
+  const [pageTitle, setPageTitle] = useState(`Giphy Reakt APP`)
+  const [search, setSearch] = useState('pizza')
+  const [query, setQuery] = useState('')
+  const results = useGiphy(query)
+
+  function onChange(e: any){
+    setSearch(e.target.value)
+  }
+
+  function onSubmit(e: any){
+    e.preventDefault()
+    setQuery(search)
+    setPageTitle(`Giphy results for: ${search}`)
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <h1>{pageTitle}</h1>
         <div>
-          <p>Edit <code>src/App.tsx</code> and save to reload.</p>
-          <p>Api => {Api}</p>
+          <form onSubmit={onSubmit}>
+            <input
+              value={search}
+              onChange={onChange}
+              placeholder="Buscar gifhys"
+            />
+            <button type="submit">Search</button>
+          </form>
+          <div className="results">
+            {results.map(item => (
+              <img key={item} src={item}></img>
+            ))}
+          </div>
         </div>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
