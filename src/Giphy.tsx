@@ -1,10 +1,12 @@
 import {useState, useEffect} from 'react'
+import Config from './Config'
 
 function useGiphy(query: String){
 
-  const APIKey: String = "8NotAnqZix8DEeXvlRrUcsuj5LyrP5xw"
-  const APILimit: String = "20"
-  const ApiURL: String = `https://api.giphy.com/v1/gifs/search?api_key=${APIKey}&limit=${APILimit}&offset=0&rating=g`
+  const _conf = new Config().config
+  const APIKey: String = `${_conf.api.key}`
+  const APILimit: String = `${_conf.api.limit}`
+  const ApiURL: String = `${_conf.api.url}${APIKey}&limit=${APILimit}&offset=0&rating=g`
   const [results, setResults] = useState([])
 
   useEffect(() => {
@@ -15,7 +17,7 @@ function useGiphy(query: String){
         const json = await response.json()
         
         return json.data.map((item:any) =>{
-          return item.images.preview_gif.url
+          return item.images.fixed_width_still.url
         })
       } catch (error){
         console.error(error)
