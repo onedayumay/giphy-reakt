@@ -15,9 +15,9 @@ function useGiphy(query: string){
       try{
         const response = await fetch(`${ApiURL}&q=${query}`)
         const json = await response.json()
-        
+        console.log(json)
         return json.data.map((item:any) =>{
-          return item.images.fixed_width_still.url
+          return item.images.original.url
         })
       } catch (error){
         console.error(error)
