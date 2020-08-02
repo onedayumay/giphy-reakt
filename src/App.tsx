@@ -46,7 +46,7 @@ function App() {
           </form>
           <div className="results">
             {results.map(item => (
-              <img key={item} src={item}></img>
+              <img key={item} alt={search} src={item}></img>
             ))}
           </div>
         </div>
