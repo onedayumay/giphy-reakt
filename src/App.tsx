@@ -19,10 +19,15 @@ function App() {
     setSearch(e.target.value)
   }
 
+  function changePageTitle(title: string){
+    setPageTitle(title)
+    document.title = title
+  }
+
   function onSubmit(e: any){
     e.preventDefault()
     setQuery(search)
-    setPageTitle(`Giphy results for: ${search}`)
+    changePageTitle(`Giphy results for "${search}"`)
   }
 
   return (

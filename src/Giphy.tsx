@@ -1,12 +1,12 @@
 import {useState, useEffect} from 'react'
 import Config from './Config'
 
-function useGiphy(query: String){
+function useGiphy(query: string){
 
   const _conf = new Config().config
-  const APIKey: String = `${_conf.api.key}`
-  const APILimit: String = `${_conf.api.limit}`
-  const ApiURL: String = `${_conf.api.url}${APIKey}&limit=${APILimit}&offset=0&rating=g`
+  const APIKey: string = `${_conf.api.key}`
+  const APILimit: string = `${_conf.api.limit}`
+  const ApiURL: string = `${_conf.api.url}${APIKey}&limit=${APILimit}&offset=0&rating=g`
   const [results, setResults] = useState([])
 
   useEffect(() => {
