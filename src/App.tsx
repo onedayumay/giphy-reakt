@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import './App.css'
 import useGiphy from './Giphy'
 import Config from './Config'
+import InfiniteScroll from "react-infinite-scroll-component"
 
 function App() {
 
@@ -9,13 +10,17 @@ function App() {
   const [pageTitle, setPageTitle] = useState(`${_conf.page.title}`)
   const [search, setSearch] = useState(`${_conf.page.placeholder}`)
   const [query, setQuery] = useState('')
-  const results = useGiphy(query)
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(0)
+  const results = useGiphy(query, page, hasMore)
 
   function onClick(e:any){
     setSearch('')
   }
 
   function onChange(e: any){
+    setHasMore(true)
+    setPage(0)
     setSearch(e.target.value)
   }
 
@@ -28,6 +33,11 @@ function App() {
     e.preventDefault()
     setQuery(search)
     changePageTitle(`Giphy results for "${search}"`)
+  }
+
+  function iNextScroll(){
+    setPage( page + 1 )
+    setHasMore(true)
   }
 
   return (
@@ -45,9 +55,16 @@ function App() {
             <button type="submit">Search</button>
           </form>
           <div className="results">
-            {results.map(item => (
-              <img key={item} alt={search} src={item}></img>
-            ))}
+            <InfiniteScroll
+            next={iNextScroll}
+            hasMore={hasMore}
+            dataLength={1}
+            loader={<h4>Loading...</h4>}
+            endMessage={`No more results`}>
+              {results.map(item => (
+                <img key={item} alt={search} src={item}></img>
+              ))}
+            </InfiniteScroll>
           </div>
         </div>
       </header>
