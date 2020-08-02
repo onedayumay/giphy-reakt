@@ -28,7 +28,7 @@ function useGiphy(query: string){
       FetchImages().then(setResults)
     }
 
-  }, [query])
+  }, [ApiURL, query])
 
   return results
 
