@@ -1,7 +1,8 @@
-import React, {useState, useRef, useCallback} from 'react'
+import React, {useState, useRef} from 'react'
 import './App.css'
 import useGiphy from './Giphy'
 import Config from './Config'
+import HookScreen from './hooks/hookScreen'
 
 function App() {
 
@@ -14,25 +15,20 @@ function App() {
   
   const {
     results,
-    hasMore,
+    noMore,
     loading,
     error
   } = useGiphy(query, page, newSearch)
 
-  //console.info(`query->'${query}', more results ${hasMore}`)
+  const ref = useRef()
+  const endPage = HookScreen(ref, '400px')
 
-  /*
-  const observer = useRef()
-  const lastSearchRef = useCallback(node => {
-    if(loading) return
-    if(observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver(entries => {
-      if(entries[0].isIntersecting){
-        console.log('intersecting')
-      }
-    })
-  })  
-  */
+  if(endPage && !loading && query !== '' && !noMore){
+    setTimeout(() =>{
+      infiniteScrollLoadNextPage()
+    }, 1000)
+    
+  }
 
   function onClick(e:any){
     if(e.target.value !== ''){
@@ -42,7 +38,6 @@ function App() {
 
   function onChange(e: any){
     if(e.target.value !== ''){
-      setPage(0)
       setSearch(e.target.value)
     }
   }
@@ -56,6 +51,7 @@ function App() {
     e.preventDefault()
     if(search !== ''){
       setNewSearch(true)
+      setPage(0)
       setQuery(search)
       changePageTitle(`Giphy results for "${search}"`)
     }
@@ -67,10 +63,10 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>{pageTitle}</h1>
-        <div>
+    <div>
+      <div className="App">
+        <header className="App-header">
+          <h1>{pageTitle}</h1>
           <form onSubmit={onSubmit}>
             <input
               value={search}
@@ -80,6 +76,8 @@ function App() {
             />
             <button type="submit">Search</button>
           </form>
+        </header>
+        <div>
           <div className="results">
               {results.map(item => (
                 <img key={item} alt={search} src={item}></img>
@@ -88,13 +86,11 @@ function App() {
 
           <div>{loading && query !== '' && `Loading...`}</div>
           <div>{error && `Error! Try again.`}</div>
+          <div>{noMore && `End of the road, search another thing!`}</div>
 
-          {
-          query !== '' && hasMore &&
-            <button onClick={infiniteScrollLoadNextPage}>next page</button>
-          }
         </div>
-      </header>
+      </div>
+      <div className="endPage" ref={ref}></div>
     </div>
   )
 }
