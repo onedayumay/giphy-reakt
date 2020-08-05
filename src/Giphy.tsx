@@ -1,36 +1,58 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useState, useEffect} from 'react'
 import Config from './Config'
 
-function useGiphy(query: string){
+function useGiphy(query: string, page: number, newSearch: boolean){
+
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [noMore, setNoMore] = useState(false)
+  const [results, setResults] = useState([])
 
   const _conf = new Config().config
   const APIKey: string = `${_conf.api.key}`
-  const APILimit: string = `${_conf.api.limit}`
-  const ApiURL: string = `${_conf.api.url}${APIKey}&limit=${APILimit}&offset=0&rating=g`
-  const [results, setResults] = useState([])
+  const APILimit: number = _conf.api.limit
+  const offset: number = APILimit * page
+  const ApiURL: string = `${_conf.api.url}${APIKey}&limit=${APILimit}&offset=${offset}&rating=g`
 
   useEffect(() => {
 
     async function FetchImages(){
       try{
+        setLoading(true)
         const response = await fetch(`${ApiURL}&q=${query}`)
         const json = await response.json()
-        
+        setLoading(false)
+        setNoMore(json.pagination.total_count < json.pagination.offset + json.pagination.count)
+
         return json.data.map((item:any) =>{
           return item.images.original.url
         })
       } catch (error){
-        console.error(error)
+        setError(true)
+        setLoading(false)
       }
     }
 
     if(query !== ''){
-      FetchImages().then(setResults)
+      FetchImages().then(newResults =>{
+        if(newSearch){
+          setResults(newResults)
+        }
+        else{
+          setResults(results.concat(newResults))
+        }
+      })
     }
 
-  }, [ApiURL, query])
+  }, [query, page])
 
-  return results
+  return {
+    "results":results,
+    "noMore":noMore,
+    "loading":loading,
+    "error":error
+  }
 
 }
 
